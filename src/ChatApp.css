@@ -1,0 +1,90 @@
+/* Actualiza el estilo del chat-container para que ocupe toda la pantalla */
+.chat-container {
+    width: 100%;
+    height: 100vh; /* Usamos la unidad de vista de altura para ocupar toda la pantalla */
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Ajusta el estilo del chat-window para que ocupe el espacio disponible */
+  .chat-window {
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+    height: 800px;
+    margin: auto;
+  }/* Message bubbles */
+.message-content {
+  margin: 10px;
+  padding: 8px 25px;
+  border-radius: 10px;
+  background-color: #e4e4e4;
+  max-width: 70%;
+  word-wrap: break-word; /* Para ajustar automáticamente el contenido al ancho del contenedor */
+}
+
+/* User message */
+.user {
+  padding: 25px;
+
+  color: #000000;
+  align-self: flex-end;
+  margin-left: auto; /* Ajusta el margen izquierdo para alinear a la derecha */
+}
+
+/* Assistant message */
+.assistant {
+  padding: 35px;
+ 
+  color: #333;
+  align-self: flex-start;
+  margin-right: auto; /* Ajusta el margen derecho para alinear a la izquierda */
+}
+
+/* Ajusta el estilo del input-area para que se muestre en la parte inferior */
+.Box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  border-radius: 0 0 10px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.Box input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.Box button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.Box button:hover {
+  background-color: #0056b3;
+}
+
+
+/* Otros estilos */
+
+.typing-indicator {
+  margin: 10px;
+  align-self: flex-start;
+  color: #999;
+}
