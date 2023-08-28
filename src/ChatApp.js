@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './ChatApp.css'
 import { Button, Input, Box } from '@chakra-ui/react';
 import { AttachmentIcon } from '@chakra-ui/icons'
@@ -8,16 +8,55 @@ import { WrapItem, Avatar } from '@chakra-ui/react';
 
 function ChatApp() {
   const [messages, setMessages] = useState([
-    { role: "system", content: "Eres un asistente de IA que ayuda a las personas a encontrar información." },
+    { role: "system", content: "Eres un asistente de Ventas" },
   ]);
   const [inputText, setInputText] = useState("");
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const fileInputRef = useRef(null);
+
+
+  const predictionKey = '05c9dddff3fc4abe93fab2d31702f2d3';
+  const predictionEndpoint = 'https://customvisonai-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/303b47ec-8b9c-4b4e-82de-1e4a8c7c4f2c/classify/iterations/Iteration1/image';
 
   const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
+  
+  console.log(selectedFile);
 
-    const userMessage = { role: "user", content: inputText };
+  let tagName = ""; // Variable para almacenar el tagName
+
+
+    if (selectedFile) {
+      const headers = new Headers();
+      headers.append('Prediction-Key', predictionKey);
+      headers.append('Content-Type', 'application/octet-stream');
+
+
+      const response = await fetch(predictionEndpoint, {
+        method: 'POST',
+        headers: headers,
+        body: selectedFile,
+      });
+
+      const predictionData = await response.json();
+
+      // Acceder al primer elemento del array "predictions"
+      const firstPrediction = predictionData.predictions[0];
+
+      // Acceder al valor de la propiedad "tagName"
+      tagName = firstPrediction.tagName;
+
+      console.log(tagName)
+
+    }
+
+    // Agregar el tagName al inputText si está definido
+    const modifiedInputText = tagName ? `${inputText}  ${tagName}` : inputText;
+    console.log(modifiedInputText)
+    const userMessage = { role: "user", content: modifiedInputText  };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInputText("");
@@ -51,11 +90,15 @@ function ChatApp() {
     const assistantResponse = { role: "assistant", content: assistantMessage };
     setMessages([...newMessages, assistantResponse]);
 
+
+
     setIsAssistantTyping(false); // Desactivar la indicación de escritura
 
   };
 
-
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
   // Personaliza el renderizado del código para aplicar estilos
   const renderers = {
     code: ({ language, value }) => (
@@ -88,7 +131,7 @@ function ChatApp() {
       </div>
       <Box>
         <Input
-        isInvalid
+          isInvalid
           errorBorderColor='teal.300'
           m='20px'
           w='50%'
@@ -100,7 +143,24 @@ function ChatApp() {
         />
 
         <Button colorScheme='teal' variant='ghost' onClick={handleSendMessage}>Send</Button>
-        <Button colorScheme='teal' variant='ghost' rightIcon={<AttachmentIcon />}>File</Button>
+        <Button
+          colorScheme='teal'
+          variant='ghost'
+          onClick={() => fileInputRef.current.click()}
+          rightIcon={<AttachmentIcon />}
+        >
+
+          {selectedFile && <p> {selectedFile.name}</p>}
+
+        </Button>
+
+        <input
+          ref={fileInputRef}
+          type='file'
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+        />
+
       </Box>
     </div>
   );
