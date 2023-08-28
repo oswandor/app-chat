@@ -16,6 +16,7 @@ function ChatApp() {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const fileInputRef = useRef(null);
+  const [tagName, setTagName] = useState(false); // Agrega el estado para tagName
 
 
   const predictionKey = '05c9dddff3fc4abe93fab2d31702f2d3';
@@ -23,10 +24,10 @@ function ChatApp() {
 
   const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
-  
-  console.log(selectedFile);
 
-  let tagName = ""; // Variable para almacenar el tagName
+    console.log(selectedFile);
+
+    let tagName = ""; // Variable para almacenar el tagName
 
 
     if (selectedFile) {
@@ -49,14 +50,14 @@ function ChatApp() {
       // Acceder al valor de la propiedad "tagName"
       tagName = firstPrediction.tagName;
 
-      console.log(tagName)
+      setTagName(true) 
 
     }
 
     // Agregar el tagName al inputText si está definido
     const modifiedInputText = tagName ? `${inputText}  ${tagName}` : inputText;
     console.log(modifiedInputText)
-    const userMessage = { role: "user", content: modifiedInputText  };
+    const userMessage = { role: "user", content: modifiedInputText };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInputText("");
@@ -91,8 +92,10 @@ function ChatApp() {
     setMessages([...newMessages, assistantResponse]);
 
 
-
     setIsAssistantTyping(false); // Desactivar la indicación de escritura
+
+    setSelectedFile(null); // Restablecer el valor del archivo seleccionado a null
+
 
   };
 
@@ -108,6 +111,11 @@ function ChatApp() {
     ),
   };
 
+
+  // Dentro del componente ChatApp
+const handleClearChat = () => {
+  setMessages([]); // Limpia el historial de mensajes
+};
   return (
     <div>
       <div className="chat-window">
@@ -120,7 +128,11 @@ function ChatApp() {
               <Avatar name='Ryan Florence' src='https://bit.ly/ryan-florence' />
             )}
             <Box className="message-content">
-              <ReactMarkdown renderers={renderers}>{message.content}</ReactMarkdown>
+              <ReactMarkdown renderers={renderers}>
+                {message.role === "user" && tagName
+                  ? message.content.split(" ").slice(0, -1).join(" ") // Elimina la última palabra
+                  : message.content}
+              </ReactMarkdown>
             </Box>
           </WrapItem>
 
@@ -130,6 +142,9 @@ function ChatApp() {
 
       </div>
       <Box>
+      <Button colorScheme="red" variant="ghost" onClick={handleClearChat}>
+        Clear Chat
+      </Button>
         <Input
           isInvalid
           errorBorderColor='teal.300'
