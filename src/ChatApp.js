@@ -65,29 +65,46 @@ function ChatApp() {
     setIsAssistantTyping(true); // Activar la indicación de escritura
 
     const requestBody = {
+     
       messages: newMessages,
       max_tokens: 800,
       temperature: 0,
       frequency_penalty: 0,
       presence_penalty: 0,
       top_p: 1,
-      stop: null
+      stop: null, 
+      dataSources: [
+        {
+          type: "AzureCognitiveSearch",
+          parameters: {
+            endpoint: "https://searchgtp.search.windows.net",
+            key: "nBb6Kkw5HsTaf6CVil56RuPWX6oxOe3JFF5Yvs0cmKAzSeBHGwJE",
+            indexName: "azuresql-index"
+          }
+        }
+      ]
+      
     };
 
+    console.log(JSON.stringify(requestBody))
+     
     const response = await fetch(
-      "https://ownchatvirtual.openai.azure.com/openai/deployments/modelgpt3516k/chat/completions?api-version=2023-07-01-preview",
+      "https://gptmodelproducto.openai.azure.com/openai/deployments/gptchatproduct/extensions/chat/completions?api-version=2023-06-01-preview",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "api-key": "c78c405b682248edbaaa2247d49ebc3a",
+          "api-key": "0f0673910b9546e8bbe6256a6f00f08e",
         },
         body: JSON.stringify(requestBody),
       }
     );
 
     const responseData = await response.json();
-    const assistantMessage = responseData.choices[0].message.content;
+
+    console.log(JSON.stringify(responseData))
+
+    const assistantMessage = responseData.choices[0].messages[1].content;
     const assistantResponse = { role: "assistant", content: assistantMessage };
     setMessages([...newMessages, assistantResponse]);
 
