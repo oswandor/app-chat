@@ -13,6 +13,7 @@ function ChatApp() {
   const [inputText, setInputText] = useState("");
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
 
+  
   const [selectedFile, setSelectedFile] = useState(null);
 
   const fileInputRef = useRef(null);
