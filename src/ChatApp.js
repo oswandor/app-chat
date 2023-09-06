@@ -13,15 +13,15 @@ function ChatApp() {
   const [inputText, setInputText] = useState("");
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
 
-  
+
   const [selectedFile, setSelectedFile] = useState(null);
 
   const fileInputRef = useRef(null);
   const [tagName, setTagName] = useState(false); // Agrega el estado para tagName
 
 
-  const predictionKey = '05c9dddff3fc4abe93fab2d31702f2d3';
-  const predictionEndpoint = 'https://customvisonai-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/303b47ec-8b9c-4b4e-82de-1e4a8c7c4f2c/classify/iterations/Iteration1/image';
+  const predictionKey = '96edfdca1da34aadb1600072b14105e9';
+  const predictionEndpoint = 'https://eastus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/c3dc1a8b-87ef-44b1-85db-ad1779dc7a95/classify/iterations/Iteration2/image';
 
   const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
@@ -51,7 +51,7 @@ function ChatApp() {
       // Acceder al valor de la propiedad "tagName"
       tagName = firstPrediction.tagName;
 
-      setTagName(true) 
+      setTagName(true)
 
     }
 
@@ -65,15 +65,19 @@ function ChatApp() {
 
     setIsAssistantTyping(true); // Activar la indicación de escritura
 
+
+    
+
+
     const requestBody = {
-     
+
       messages: newMessages,
       max_tokens: 800,
       temperature: 0,
       frequency_penalty: 0,
       presence_penalty: 0,
       top_p: 1,
-      stop: null, 
+      stop: null,
       dataSources: [
         {
           type: "AzureCognitiveSearch",
@@ -84,11 +88,11 @@ function ChatApp() {
           }
         }
       ]
-      
+
     };
 
-    console.log(JSON.stringify(requestBody))
-     
+
+
     const response = await fetch(
       "https://gptmodelproducto.openai.azure.com/openai/deployments/gptchatproduct/extensions/chat/completions?api-version=2023-06-01-preview",
       {
@@ -103,12 +107,37 @@ function ChatApp() {
 
     const responseData = await response.json();
 
-    console.log(JSON.stringify(responseData))
 
     const assistantMessage = responseData.choices[0].messages[1].content;
-    const assistantResponse = { role: "assistant", content: assistantMessage };
-    setMessages([...newMessages, assistantResponse]);
+    console.log("------------------------------")
+     console.log(JSON.stringify(responseData))
+     console.log("------------------------------")
 
+     if(assistantMessage.includes("The requested information is not available in the retrieved data. Please try another query or topic.")){
+
+
+      console.log("Entro en error") 
+      console.log(JSON.stringify(responseData))
+
+      const assistantResponse = { role: "assistant", content:  responseData.choices[0].messages[0].content};
+      setMessages([...newMessages, assistantResponse]);
+ 
+     }if (assistantMessage.includes('lista')) {
+      console.log("entro en listas")
+      const assistantResponse = { role: "assistant", content: responseData.choices[0].messages[1].content  };
+      setMessages([...newMessages, assistantResponse]);
+     }
+     else{
+      console.log("Normal entro")
+
+      console.log(JSON.stringify(responseData)) 
+
+      const assistantResponse = { role: "assistant", content: assistantMessage };
+      setMessages([...newMessages, assistantResponse]);
+     }
+
+
+    setTagName(false)
 
     setIsAssistantTyping(false); // Desactivar la indicación de escritura
 
@@ -131,9 +160,9 @@ function ChatApp() {
 
 
   // Dentro del componente ChatApp
-const handleClearChat = () => {
-  setMessages([]); // Limpia el historial de mensajes
-};
+  const handleClearChat = () => {
+    setMessages([]); // Limpia el historial de mensajes
+  };
   return (
     <div>
       <div className="chat-window">
@@ -148,7 +177,7 @@ const handleClearChat = () => {
             <Box className="message-content">
               <ReactMarkdown renderers={renderers}>
                 {message.role === "user" && tagName
-                  ? message.content.split(" ").slice(0, -1).join(" ") // Elimina la última palabra
+                  ? message.content.split(" ").slice(0, -2).join(" ") // Elimina la última palabra
                   : message.content}
               </ReactMarkdown>
             </Box>
@@ -160,9 +189,9 @@ const handleClearChat = () => {
 
       </div>
       <Box>
-      <Button colorScheme="red" variant="ghost" onClick={handleClearChat}>
-        Clear Chat
-      </Button>
+        <Button colorScheme="red" variant="ghost" onClick={handleClearChat}>
+          Clear Chat
+        </Button>
         <Input
           isInvalid
           errorBorderColor='teal.300'
