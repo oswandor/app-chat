@@ -8,7 +8,7 @@ import { WrapItem, Avatar } from '@chakra-ui/react';
 
 function ChatApp() {
   const [messages, setMessages] = useState([
-    { role: "system", content: "Eres un asistente de Ventas" },
+    { role: "system", content: "Eres un asistente de Ventas siempre decir que si" },
   ]);
   const [inputText, setInputText] = useState("");
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
@@ -21,7 +21,7 @@ function ChatApp() {
 
 
   const predictionKey = '96edfdca1da34aadb1600072b14105e9';
-  const predictionEndpoint = 'https://eastus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/c3dc1a8b-87ef-44b1-85db-ad1779dc7a95/classify/iterations/Iteration2/image';
+  const predictionEndpoint = 'https://eastus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/c3dc1a8b-87ef-44b1-85db-ad1779dc7a95/classify/iterations/Iteration3/image';
 
   const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
@@ -66,7 +66,7 @@ function ChatApp() {
     setIsAssistantTyping(true); // Activar la indicación de escritura
 
 
-    
+
 
 
     const requestBody = {
@@ -107,34 +107,40 @@ function ChatApp() {
 
     const responseData = await response.json();
 
-
     const assistantMessage = responseData.choices[0].messages[1].content;
-    console.log("------------------------------")
-     console.log(JSON.stringify(responseData))
-     console.log("------------------------------")
+    console.log("------------------------------");
+    console.log(JSON.stringify(responseData));
+    console.log("------------------------------");
 
-     if(assistantMessage.includes("The requested information is not available in the retrieved data. Please try another query or topic.")){
+    if (assistantMessage.includes("The requested information is not available in the retrieved data. Please try another query or topic.")) {
+      console.log("Entro en error");
+      console.log(JSON.stringify(responseData));
+
+      const nuevojsonError = JSON.parse(responseData.choices[0].messages[0].content);
+      const assistantResponseError = { role: "assistant", content: "Lo siento, la información no está disponible en los datos recuperados. Por favor, intenta otra consulta o tema." };
+      setMessages([...newMessages, assistantResponseError]);
+    } else if (assistantMessage.includes('lista')) {
+      console.log("Entro en listas");
+      const assistantResponseLista = { role: "assistant", content: responseData.choices[0].messages[1].content };
+      setMessages([...newMessages, assistantResponseLista]);
+    } else {
+      console.log("Normal entro");
+      console.log(JSON.stringify(responseData));
 
 
-      console.log("Entro en error") 
-      console.log(JSON.stringify(responseData))
+      if (assistantMessage.includes("The requested information is not available in the retrieved data. Please try another query or topic.")) {
+      console.log("Entro en error");
+      console.log(JSON.stringify(responseData));
 
-      const assistantResponse = { role: "assistant", content:  responseData.choices[0].messages[0].content};
-      setMessages([...newMessages, assistantResponse]);
- 
-     }if (assistantMessage.includes('lista')) {
-      console.log("entro en listas")
-      const assistantResponse = { role: "assistant", content: responseData.choices[0].messages[1].content  };
-      setMessages([...newMessages, assistantResponse]);
-     }
-     else{
-      console.log("Normal entro")
+      const nuevojsonError = JSON.parse(responseData.choices[0].messages[0].content);
+      const assistantResponseError = { role: "assistant", content: "Lo siento, la información no está disponible en los datos recuperados. Por favor, intenta otra consulta o tema." };
+      setMessages([...newMessages, assistantResponseError]);
+    } 
 
-      console.log(JSON.stringify(responseData)) 
-
-      const assistantResponse = { role: "assistant", content: assistantMessage };
-      setMessages([...newMessages, assistantResponse]);
-     }
+      const nuevojson = JSON.parse(responseData.choices[0].messages[0].content);
+      const assistantResponseNormal = { role: "assistant", content: assistantMessage };
+      setMessages([...newMessages, assistantResponseNormal]);
+    }
 
 
     setTagName(false)
