@@ -84,7 +84,7 @@ function ChatApp() {
           parameters: {
             endpoint: "https://searchgtp.search.windows.net",
             key: "nBb6Kkw5HsTaf6CVil56RuPWX6oxOe3JFF5Yvs0cmKAzSeBHGwJE",
-            indexName: "azuresql-index"
+            indexName: "azureindexernew"
           }
         }
       ]
