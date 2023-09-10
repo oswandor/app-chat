@@ -20,8 +20,8 @@ function ChatApp() {
   const [tagName, setTagName] = useState(false); // Agrega el estado para tagName
 
 
-  const predictionKey = '96edfdca1da34aadb1600072b14105e9';
-  const predictionEndpoint = 'https://eastus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/c3dc1a8b-87ef-44b1-85db-ad1779dc7a95/classify/iterations/Iteration3/image';
+  const predictionKey = '385089a6e6044d3bb29a889049f1d0be';
+  const predictionEndpoint = 'https://eastus2.api.cognitive.microsoft.com/customvision/v3.0/Prediction/3f564c91-0dba-4b07-a4f1-8b85aa22a0fc/classify/iterations/Iteration1/image';
 
   const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
@@ -73,7 +73,7 @@ function ChatApp() {
 
       messages: newMessages,
       max_tokens: 800,
-      temperature: 0,
+      temperature: 0.7,
       frequency_penalty: 0,
       presence_penalty: 0,
       top_p: 1,
@@ -82,9 +82,12 @@ function ChatApp() {
         {
           type: "AzureCognitiveSearch",
           parameters: {
-            endpoint: "https://searchgtp.search.windows.net",
-            key: "nBb6Kkw5HsTaf6CVil56RuPWX6oxOe3JFF5Yvs0cmKAzSeBHGwJE",
-            indexName: "azureindexernew"
+            endpoint: "https://searchdeveus.search.windows.net",
+            key: "l1Aw6ny4aSmph5ORnvHUopqF9JuxwYFNBBRPMIaWxGAzSeDZxUyw",
+            indexName: "azuresql-index", 
+            queryType: "semantic",
+            semanticConfiguration: "semanticsearch",
+
           }
         }
       ]
@@ -94,12 +97,12 @@ function ChatApp() {
 
 
     const response = await fetch(
-      "https://gptmodelproducto.openai.azure.com/openai/deployments/gptchatproduct/extensions/chat/completions?api-version=2023-06-01-preview",
+      "https://openaidevpro.openai.azure.com/openai/deployments/gptproduct/extensions/chat/completions?api-version=2023-06-01-preview",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "api-key": "0f0673910b9546e8bbe6256a6f00f08e",
+          "api-key": "66fb4fff8aa046bfbc56ae763b53c093",
         },
         body: JSON.stringify(requestBody),
       }
