@@ -97,7 +97,7 @@ function ChatApp() {
 
 
     const response = await fetch(
-      "https://openaidevpro.openai.azure.com/openai/deployments/gptproduct/extensions/chat/completions?api-version=2023-06-01-preview",
+      "https://openaidevpro.openai.azure.com/openai/deployments/gpt35turboproduc/extensions/chat/completions?api-version=2023-06-01-preview",
       {
         method: "POST",
         headers: {
