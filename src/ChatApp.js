@@ -20,10 +20,8 @@ function ChatApp() {
   const [tagName, setTagName] = useState(false); // Agrega el estado para tagName
 
 
-  const predictionKey = '385089a6e6044d3bb29a889049f1d0be';
   const predictionEndpoint = 'https://eastus2.api.cognitive.microsoft.com/customvision/v3.0/Prediction/3f564c91-0dba-4b07-a4f1-8b85aa22a0fc/classify/iterations/Iteration1/image';
   const predictionKey = '385089a6e6044d3bb29a889049f1d0be';
-  const predictionEndpoint = 'https://eastus2.api.cognitive.microsoft.com/customvision/v3.0/Prediction/3f564c91-0dba-4b07-a4f1-8b85aa22a0fc/classify/iterations/Iteration1/image';
 
   const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
