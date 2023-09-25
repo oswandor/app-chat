@@ -20,8 +20,8 @@ function ChatApp() {
   const [tagName, setTagName] = useState(false); // Agrega el estado para tagName
 
 
-  const predictionKey = '05c9dddff3fc4abe93fab2d31702f2d3';
-  const predictionEndpoint = 'https://customvisonai-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/303b47ec-8b9c-4b4e-82de-1e4a8c7c4f2c/classify/iterations/Iteration1/image';
+  const predictionKey = '385089a6e6044d3bb29a889049f1d0be';
+  const predictionEndpoint = 'https://eastus2.api.cognitive.microsoft.com/customvision/v3.0/Prediction/3f564c91-0dba-4b07-a4f1-8b85aa22a0fc/classify/iterations/Iteration1/image';
 
   const handleSendMessage = async () => {
     if (inputText.trim() === "") return;
@@ -78,8 +78,8 @@ function ChatApp() {
         {
           type: "AzureCognitiveSearch",
           parameters: {
-            endpoint: "https://searchgtp.search.windows.net",
-            key: "nBb6Kkw5HsTaf6CVil56RuPWX6oxOe3JFF5Yvs0cmKAzSeBHGwJE",
+            endpoint: "https://searchdeveus.search.windows.net",
+            key: "l1Aw6ny4aSmph5ORnvHUopqF9JuxwYFNBBRPMIaWxGAzSeDZxUyw",
             indexName: "azuresql-index"
           }
         }
@@ -90,12 +90,12 @@ function ChatApp() {
     console.log(JSON.stringify(requestBody))
      
     const response = await fetch(
-      "https://gptmodelproducto.openai.azure.com/openai/deployments/gptchatproduct/extensions/chat/completions?api-version=2023-06-01-preview",
+      "https://modelgptdev.openai.azure.com/openai/deployments/productestfreund/extensions/chat/completions?api-version=2023-06-01-preview",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "api-key": "0f0673910b9546e8bbe6256a6f00f08e",
+          "api-key": "f57784dfc99d4f28b3745911cf9205e3",
         },
         body: JSON.stringify(requestBody),
       }
